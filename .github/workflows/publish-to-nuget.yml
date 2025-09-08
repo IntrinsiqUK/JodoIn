@@ -1,0 +1,35 @@
+name: Publish Jodo.Api.Client to NuGet
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Build, Pack, and Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore Jodo.sln
+
+      - name: Build
+        run: dotnet build Jodo.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Jodo.sln --no-build --verbosity normal
+
+      - name: Pack
+        # This creates a package with version 1.0.<run_number>. You might want a more sophisticated versioning strategy.
+        run: dotnet pack Jodo.Api.Client/Jodo.Api.Client.csproj --configuration Release --no-build -o ./nupkg /p:Version=1.0.${{ github.run_number }}
+
+      - name: Push to NuGet
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"

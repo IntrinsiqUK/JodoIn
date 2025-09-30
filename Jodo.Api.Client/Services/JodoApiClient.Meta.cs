@@ -1,42 +1,44 @@
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Jodo.Api.Client.Models.Meta;
 
 namespace Jodo.Api.Client.Services
 {
     public partial class JodoApiClient
     {
-        public Task<object> ListGrades(string collectorCode = null)
+        public Task<List<Grade>> ListGrades(string collectorCode = null)
         {
             var uri = "api/v1/integrations/erp/grades";
             if (!string.IsNullOrEmpty(collectorCode))
             {
                 uri += $"?collector_code={collectorCode}";
             }
-            return Get<object>(uri);
+            return GetFromEnvelope<List<Grade>>(uri);
         }
 
-        public Task<object> ListDiscounts(string collectorCode = null)
+        public Task<List<object>> ListDiscounts(string collectorCode = null)
         {
             var uri = "api/v1/integrations/erp/discounts";
             if (!string.IsNullOrEmpty(collectorCode))
             {
                 uri += $"?collector_code={collectorCode}";
             }
-            return Get<object>(uri);
+            return GetFromEnvelope<List<object>>(uri);
         }
 
-        public Task<object> ListFeeComponents(string collectorCode = null)
+        public Task<List<FeeComponent>> ListFeeComponents(string collectorCode = null)
         {
             var uri = "api/v1/integrations/erp/fee-components";
             if (!string.IsNullOrEmpty(collectorCode))
             {
                 uri += $"?collector_code={collectorCode}";
             }
-            return Get<object>(uri);
+            return GetFromEnvelope<List<FeeComponent>>(uri);
         }
 
-        public Task<object> ListBranches()
+        public Task<List<Branch>> ListBranches()
         {
-            return Get<object>("api/v1/integrations/erp/branches");
+            return GetFromEnvelope<List<Branch>>("api/v1/integrations/erp/branches");
         }
     }
 }

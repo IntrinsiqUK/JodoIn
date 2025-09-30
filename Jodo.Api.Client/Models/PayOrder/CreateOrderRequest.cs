@@ -1,32 +1,32 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
 namespace Jodo.Api.Client.Models.PayOrder
 {
     public class CreateOrderRequest
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("phone")]
+        [JsonPropertyName("phone")]
         public string Phone { get; set; }
 
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
 
-        [JsonProperty("details")]
+        [JsonPropertyName("details")]
         public List<OrderDetail> Details { get; set; }
 
-        [JsonProperty("callback_url")]
+        [JsonPropertyName("callback_url")]
         public string CallbackUrl { get; set; }
     }
 
     public class OrderDetail
     {
-        [JsonProperty("component_type")]
+        [JsonPropertyName("component_type")]
         public string ComponentType { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
     }
 }

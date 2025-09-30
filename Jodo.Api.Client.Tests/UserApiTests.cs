@@ -1,7 +1,8 @@
 using Jodo.Api.Client.Models.User;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Jodo.Api.Client.Tests
         {
             // Arrange
             var expectedResponse = new RegisterUserResponse { RegistrationId = "12345" };
-            var jsonResponse = JsonConvert.SerializeObject(expectedResponse);
+            var jsonResponse = JsonSerializer.Serialize(expectedResponse);
             var mockHandler = new MockHttpMessageHandler();
             mockHandler.SetupSendAsync(HttpStatusCode.OK, jsonResponse);
             var client = JodoApiClientTestHelper.CreateClient(mockHandler);
@@ -39,9 +40,10 @@ namespace Jodo.Api.Client.Tests
 
             Assert.IsNotNull(mockHandler.CapturedRequest?.Content);
             var capturedBody = await mockHandler.CapturedRequest.Content.ReadAsStringAsync();
-            var sentRequest = JsonConvert.DeserializeObject<RegisterUserRequest>(capturedBody);
-            Assert.AreEqual(request.Name, sentRequest.Name);
-            Assert.AreEqual(request.Email, sentRequest.Email);
+            var sentRequest = JsonSerializer.Deserialize<RegisterUserRequest>(capturedBody);
+            Assert.IsNotNull(sentRequest);
+            Assert.AreEqual(request.Name, sentRequest!.Name);
+            Assert.AreEqual(request.Email, sentRequest!.Email);
         }
 
         [TestMethod]
@@ -49,7 +51,7 @@ namespace Jodo.Api.Client.Tests
         {
             // Arrange
             var expectedResponse = new GetAccessTokenResponse { AccessToken = "test_token" };
-            var jsonResponse = JsonConvert.SerializeObject(expectedResponse);
+            var jsonResponse = JsonSerializer.Serialize(expectedResponse);
             var mockHandler = new MockHttpMessageHandler();
             mockHandler.SetupSendAsync(HttpStatusCode.OK, jsonResponse);
             var client = JodoApiClientTestHelper.CreateClient(mockHandler);

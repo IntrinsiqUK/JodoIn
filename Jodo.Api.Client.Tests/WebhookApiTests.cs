@@ -1,40 +1,41 @@
 using Jodo.Api.Client.Models.Shared;
 using Jodo.Api.Client.Models.Webhook;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Jodo.Api.Client.Tests
 {
     [TestClass]
-    public class WebhookApiTests
+    public class WebhookApiTests : JodoApiIntegrationTestBase
     {
         [TestMethod]
-        public async Task AddWebhook_Should_Return_Success()
+        public async Task Webhook_List_Disable_Add_Then_List_Should_Work()
         {
-            // Arrange
-            var expectedResponse = new ApiResponse { Success = true };
-            var jsonResponse = JsonConvert.SerializeObject(expectedResponse);
-            var mockHandler = new MockHttpMessageHandler();
-            mockHandler.SetupSendAsync(HttpStatusCode.OK, jsonResponse);
-            var client = JodoApiClientTestHelper.CreateClient(mockHandler);
+            var testUrl = "https://example.com/webhook-test";
+            var eventCode = Jodo.Api.Client.Models.Webhook.WebhookEventCode.PayPaymentDebited;
+            var failureEmails = "you@example.com";
 
-            var request = new AddWebhookRequest
+            // list existing
+            var list1 = await RunAndReport(() => Client.ListWebhooks());
+            Assert.IsNotNull(list1);
+
+            // if exists, disable it
+            var existing = list1.Find(w => w.Url == testUrl && w.EventCode == eventCode);
+            if (existing != null)
             {
-                Url = "https://example.com/webhook",
-                EventCode = "test.event"
-            };
+                await RunAndReport(() => Client.DisableWebhook(existing.Id));
+            }
 
-            // Act
-            var result = await client.AddWebhook(request);
+            // add webhook
+            var addResponse = await RunAndReport(() => Client.AddWebhook(new AddWebhookRequest { Url = testUrl, EventCode = eventCode, FailureNotificationEmail = failureEmails }));
+            Assert.IsNotNull(addResponse);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(addResponse.Id));
+            Assert.AreEqual(testUrl, addResponse.Url);
+            Assert.AreEqual(eventCode, addResponse.EventCode);
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Success);
-            mockHandler.VerifySendAsync(HttpMethod.Post, "/api/v1/integrations/erp/webhooks", Times.Once());
+            // list again and assert present
+            var list2 = await RunAndReport(() => Client.ListWebhooks());
+            Assert.IsTrue(list2.Exists(w => w.Url == testUrl && w.EventCode == eventCode));
         }
     }
 }

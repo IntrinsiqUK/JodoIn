@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -6,31 +6,31 @@ namespace Jodo.Api.Client.Models.Student
 {
     public class PostPaymentRequest
     {
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
 
-        [JsonProperty("paid_at")]
+        [JsonPropertyName("paid_at")]
         public DateTime PaidAt { get; set; }
 
-        [JsonProperty("mode")]
+        [JsonPropertyName("mode")]
         public string Mode { get; set; }
 
-        [JsonProperty("notes")]
+        [JsonPropertyName("notes")]
         public string Notes { get; set; }
 
-        [JsonProperty("transaction_id")]
+        [JsonPropertyName("transaction_id")]
         public string TransactionId { get; set; }
 
-        [JsonProperty("fee_components")]
+        [JsonPropertyName("fee_components")]
         public List<PaymentFeeComponentModel> FeeComponents { get; set; }
     }
 
     public class PaymentFeeComponentModel
     {
-        [JsonProperty("component_type")]
+        [JsonPropertyName("component_type")]
         public string ComponentType { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
     }
 }

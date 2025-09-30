@@ -46,7 +46,7 @@ namespace Jodo.Api.Client.Tests
                 times,
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == method &&
-                    req.RequestUri.ToString().EndsWith(expectedUri)
+                    req.RequestUri != null && req.RequestUri.ToString().EndsWith(expectedUri)
                 ),
                 ItExpr.IsAny<CancellationToken>()
             );

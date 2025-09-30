@@ -1,12 +1,13 @@
 using Jodo.Api.Client.Models.PaymentLink;
+using Jodo.Api.Client.Models.Shared;
 using System.Threading.Tasks;
 
 namespace Jodo.Api.Client.Services
 {
     public partial interface IJodoApiClient
     {
-        Task<object> CreatePaymentLink(CreatePaymentLinkRequest request);
-        Task<object> GetPaymentLinkDetails(string orderId);
+        Task<PaymentLinkCreateResponse> CreatePaymentLink(CreatePaymentLinkRequest request);
+        Task<PaymentLinkDetails> GetPaymentLinkDetails(string orderId);
         Task CancelPaymentLink(string orderId);
     }
 }

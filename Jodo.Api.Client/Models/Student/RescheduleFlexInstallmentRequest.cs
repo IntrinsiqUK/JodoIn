@@ -1,14 +1,14 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 
 namespace Jodo.Api.Client.Models.Student
 {
     public class RescheduleFlexInstallmentRequest
     {
-        [JsonProperty("due_date")]
+        [JsonPropertyName("due_date")]
         public DateTime DueDate { get; set; }
 
-        [JsonProperty("new_due_date")]
+        [JsonPropertyName("new_due_date")]
         public DateTime NewDueDate { get; set; }
     }
 }

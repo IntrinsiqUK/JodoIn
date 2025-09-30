@@ -1,13 +1,15 @@
 using Jodo.Api.Client.Models.Webhook;
+using Jodo.Api.Client.Models.Shared;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Jodo.Api.Client.Services
 {
     public partial interface IJodoApiClient
     {
-        Task<object> AddWebhook(AddWebhookRequest request);
+        Task<WebhookItem> AddWebhook(AddWebhookRequest request);
         Task DisableWebhook(string webhookId);
-        Task<object> ListWebhooks();
-        Task<object> GetWebhook(string webhookId);
+        Task<List<WebhookItem>> ListWebhooks();
+        Task<WebhookItem> GetWebhook(string webhookId);
     }
 }

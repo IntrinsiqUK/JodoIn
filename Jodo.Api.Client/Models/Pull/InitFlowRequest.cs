@@ -1,28 +1,28 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Jodo.Api.Client.Models.Pull
 {
     public class InitFlowRequest
     {
-        [JsonProperty("student")]
+        [JsonPropertyName("student")]
         public StudentIdentifier Student { get; set; }
 
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public Options Options { get; set; }
     }
 
     public class StudentIdentifier
     {
-        [JsonProperty("identifier")]
+        [JsonPropertyName("identifier")]
         public string Identifier { get; set; }
 
-        [JsonProperty("collector_code")]
+        [JsonPropertyName("collector_code")]
         public int CollectorCode { get; set; }
     }
 
     public class Options
     {
-        [JsonProperty("callback_url")]
+        [JsonPropertyName("callback_url")]
         public string CallbackUrl { get; set; }
     }
 }

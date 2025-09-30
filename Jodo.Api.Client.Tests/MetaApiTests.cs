@@ -1,71 +1,59 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Jodo.Api.Client.Models.Meta;
 
 namespace Jodo.Api.Client.Tests
 {
     [TestClass]
-    public class MetaApiTests
+    public class MetaApiTests : JodoApiIntegrationTestBase
     {
         [TestMethod]
         public async Task ListBranches_Should_Return_ListOfBranches()
         {
-            // Arrange
-            var expectedResponse = new List<object> { new { id = 1, name = "Main Branch" } };
-            var jsonResponse = JsonConvert.SerializeObject(expectedResponse);
-            var mockHandler = new MockHttpMessageHandler();
-            mockHandler.SetupSendAsync(HttpStatusCode.OK, jsonResponse);
-            var client = JodoApiClientTestHelper.CreateClient(mockHandler);
-
             // Act
-            var result = await client.ListBranches();
+            var result = await RunAndReport(() => Client.ListBranches());
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            mockHandler.VerifySendAsync(HttpMethod.Get, "/api/v1/integrations/erp/branches", Times.Once());
+            Assert.IsNotNull(result);           // Validate that we have a response
+            Assert.IsTrue(result.Count >= 1);   // Validate that we have at least one branch
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result[0].Name)); // Validate that the first branch has a name
         }
 
         [TestMethod]
         public async Task ListGrades_Should_Return_ListOfGrades()
         {
-            // Arrange
-            var expectedResponse = new List<object> { new { id = "g1", name = "Grade 1" } };
-            var jsonResponse = JsonConvert.SerializeObject(expectedResponse);
-            var mockHandler = new MockHttpMessageHandler();
-            mockHandler.SetupSendAsync(HttpStatusCode.OK, jsonResponse);
-            var client = JodoApiClientTestHelper.CreateClient(mockHandler);
-
             // Act
-            var result = await client.ListGrades();
+            var result = await RunAndReport(() => Client.ListGrades());
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            mockHandler.VerifySendAsync(HttpMethod.Get, "/api/v1/integrations/erp/grades", Times.Once());
+            Assert.IsNotNull(result);           // Validate that we have a response
+            
+            // This test doesn't currently check for grades as the system may not have any setup.
         }
 
         [TestMethod]
         public async Task ListDiscounts_Should_Return_ListOfDiscounts()
         {
-            // Arrange
-            var expectedResponse = new List<object> { new { id = "d1", name = "Discount 1" } };
-            var jsonResponse = JsonConvert.SerializeObject(expectedResponse);
-            var mockHandler = new MockHttpMessageHandler();
-            mockHandler.SetupSendAsync(HttpStatusCode.OK, jsonResponse);
-            var client = JodoApiClientTestHelper.CreateClient(mockHandler);
-
             // Act
-            var result = await client.ListDiscounts("some_code");
+            var result = await RunAndReport(() => Client.ListDiscounts("some_code"));
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            mockHandler.VerifySendAsync(HttpMethod.Get, "/api/v1/integrations/erp/discounts?collector_code=some_code", Times.Once());
+
+            // This test doesn't currently check for discounts as the system may not have any setup.
+        }
+
+        [TestMethod]
+        public async Task ListFeeComponents_Should_Return_List()
+        {
+            // Act
+            var result = await RunAndReport(() => Client.ListFeeComponents("some_code"));
+
+            // Assert
+            Assert.IsNotNull(result);
+
+            // This test doesn't currently check for fee components as the system may not have any setup.
         }
     }
 }

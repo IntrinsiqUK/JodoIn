@@ -1,26 +1,26 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
 namespace Jodo.Api.Client.Models.PayOrder
 {
     public class GetOrderDetailsResponse
     {
-        [JsonProperty("order_id")]
+        [JsonPropertyName("order_id")]
         public string OrderId { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("phone")]
+        [JsonPropertyName("phone")]
         public string Phone { get; set; }
 
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
 
-        [JsonProperty("details")]
+        [JsonPropertyName("details")]
         public List<OrderDetail> Details { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
     }
 }

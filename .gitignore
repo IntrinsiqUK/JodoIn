@@ -1,5 +1,6 @@
-/obj
-/bin
+*/obj
+*/bin
 *.dll
+*.exe
 *.pdb
 Jodo.Api.Client.deps.json

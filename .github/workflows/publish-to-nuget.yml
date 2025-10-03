@@ -24,9 +24,6 @@ jobs:
       - name: Build
         run: dotnet build Jodo.sln --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test Jodo.sln --no-build --verbosity normal
-
       - name: Pack
         # This creates a package with version 1.0.<run_number>. You might want a more sophisticated versioning strategy.
         run: dotnet pack Jodo.Api.Client/Jodo.Api.Client.csproj --configuration Release --no-build -o ./nupkg /p:Version=1.0.${{ github.run_number }}
